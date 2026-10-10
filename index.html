@@ -1,230 +1,33 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Our Little World ♡ - Uma experiência interativa celebrando a história de Jones e Cami">
-    <meta name="theme-color" content="#667eea">
-    
-    <title>Our Little World ♡</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <!-- Canvas para partículas e efeitos visuais -->
-    <canvas id="particleCanvas"></canvas>
-    
-    <!-- Container principal do mundo -->
-    <div id="worldContainer" class="world-container">
-        <!-- Céu com ciclo de iluminação -->
-        <div id="skyBackground" class="sky-background"></div>
-        
-        <!-- Camadas de parallax -->
-        <div class="parallax-layer far-mountains"></div>
-        <div class="parallax-layer clouds"></div>
-        
-        <!-- Mundo principal -->
-        <div class="world-main">
-            <!-- Árvore da Memória (centro) -->
-            <div id="memoryTree" class="memory-tree" data-interactive="true">
-                <div class="tree-trunk"></div>
-                <div class="tree-foliage">
-                    <div class="leaf"></div>
-                    <div class="leaf"></div>
-                    <div class="leaf"></div>
-                </div>
-                <div class="tree-label">Árvore da Memória</div>
-            </div>
-            
-            <!-- Ninho do Richarlyson (esquerda) -->
-            <div id="richNest" class="rich-nest-container" data-interactive="true">
-                <div class="nest">
-                    <div class="nest-base"></div>
-                    <div id="richarlyson" class="richarlyson">
-                        <div class="body"></div>
-                        <div class="head"></div>
-                        <div class="eye"></div>
-                        <div class="beak"></div>
-                    </div>
-                </div>
-                <div class="nest-label">Ninho do Richarlyson</div>
-            </div>
-            
-            <!-- Santuário dos Coelhinhos (direita) -->
-            <div id="rabbitSanctuary" class="rabbit-sanctuary" data-interactive="true">
-                <div class="sanctuary-base"></div>
-                <div class="rabbits-container">
-                    <div class="rabbit rabbit-1" data-rabbit-id="1"></div>
-                    <div class="rabbit rabbit-2" data-rabbit-id="2"></div>
-                    <div class="rabbit rabbit-3" data-rabbit-id="3"></div>
-                    <div class="rabbit rabbit-4" data-rabbit-id="4"></div>
-                </div>
-                <div class="sanctuary-label">Santuário dos Coelhinhos</div>
-            </div>
-            
-            <!-- Quadro de Investigação do Cellbit (canto inferior esquerdo) -->
-            <div id="cellbitInvestigation" class="investigation-desk" data-interactive="true">
-                <div class="desk-base"></div>
-                <div class="desk-label">Investigação do Cellbit</div>
-            </div>
-            
-            <!-- Mina dos Tesouros (canto inferior direito) -->
-            <div id="treasureMine" class="mine-entrance" data-interactive="true">
-                <div class="mine-frame"></div>
-                <div class="mine-label">Mina dos Tesouros</div>
-            </div>
-            
-            <!-- Céu dos Desejos (topo) -->
-            <div id="skyWishes" class="sky-wishes-zone" data-interactive="true">
-                <div class="stars-container">
-                    <canvas id="starsCanvas" width="100" height="100"></canvas>
-                </div>
-                <div class="wishes-label">Céu dos Desejos</div>
-            </div>
-        </div>
-        
-        <!-- Parallax layer próximo (frente) -->
-        <div class="parallax-layer foreground-flora"></div>
-    </div>
-    
-    <!-- UI de Controle -->
-    <div id="uiControls" class="ui-controls">
-        <button id="btnAudio" class="btn-control" title="Toggle Audio">🔊</button>
-        <button id="btnPhoto" class="btn-control" title="Photo Mode">📷</button>
-        <button id="btnAchievements" class="btn-control" title="Achievements">🏆</button>
-        <button id="btnInventory" class="btn-control" title="Inventory">🎒</button>
-        <button id="btnLetter" class="btn-control" title="Love Letter">💌</button>
-        <button id="btnSettings" class="btn-control" title="Settings">⚙️</button>
-    </div>
-    
-    <!-- Modal: Carta de Amor -->
-    <div id="letterModal" class="modal">
-        <div class="modal-content letter-content">
-            <button class="modal-close">&times;</button>
-            <div class="letter-paper">
-                <div class="letter-header">💌</div>
-                <h2 id="letterTitle" class="letter-title">Para Cami</h2>
-                <div id="letterBody" class="letter-body"></div>
-                <div class="letter-signature">
-                    <p>Com todo meu amor,</p>
-                    <p id="letterSignature" class="signature">Jones</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Modal: Conquistas -->
-    <div id="achievementsModal" class="modal">
-        <div class="modal-content achievements-content">
-            <button class="modal-close">&times;</button>
-            <h2>Conquistas Desbloqueadas</h2>
-            <div id="achievementsList" class="achievements-list"></div>
-        </div>
-    </div>
-    
-    <!-- Modal: Inventário -->
-    <div id="inventoryModal" class="modal">
-        <div class="modal-content inventory-content">
-            <button class="modal-close">&times;</button>
-            <h2>Expedição - Inventário</h2>
-            <div id="inventoryGrid" class="inventory-grid"></div>
-        </div>
-    </div>
-    
-    <!-- Modal: Investigação do Cellbit -->
-    <div id="investigationModal" class="modal">
-        <div class="modal-content investigation-content">
-            <button class="modal-close">&times;</button>
-            <h2>📋 Quadro de Investigação</h2>
-            <div class="investigation-board">
-                <div id="investigationNotes" class="investigation-notes"></div>
-                <div id="investigationPuzzles" class="investigation-puzzles"></div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Modal: Ninho do Richarlyson -->
-    <div id="richNestModal" class="modal">
-        <div class="modal-content rich-nest-modal">
-            <button class="modal-close">&times;</button>
-            <h2>🥚 Ninho do Richarlyson</h2>
-            <div class="nest-interaction">
-                <canvas id="richCharacterCanvas" width="200" height="200"></canvas>
-                <div class="nest-actions">
-                    <button class="nest-btn" data-action="feed">Dar Maçã 🍎</button>
-                    <button class="nest-btn" data-action="carrot">Cenoura 🥕</button>
-                    <button class="nest-btn" data-action="pet">Acariciar 💕</button>
-                    <button class="nest-btn" data-action="talk">Conversar 💬</button>
-                </div>
-                <div id="affectionMeter" class="affection-meter">
-                    <div class="affection-fill"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Modal: Santuário dos Coelhinhos -->
-    <div id="rabbitSanctuaryModal" class="modal">
-        <div class="modal-content rabbit-sanctuary-modal">
-            <button class="modal-close">&times;</button>
-            <h2>🐰 Santuário dos Coelhinhos</h2>
-            <div id="rabbitInteractionArea" class="rabbit-interaction-area">
-                <!-- Coelhinhos renderizados aqui -->
-            </div>
-            <div class="rabbit-info">
-                <p id="rabbitInfo">Clique em um coelhinho para interagir</p>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Modal: Mina dos Tesouros -->
-    <div id="mineModal" class="modal">
-        <div class="modal-content mine-content">
-            <button class="modal-close">&times;</button>
-            <h2>⛏️ Mina dos Tesouros</h2>
-            <div class="mine-blocks-grid" id="mineBlocksGrid">
-                <!-- Blocos de mineração renderizados aqui -->
-            </div>
-        </div>
-    </div>
-    
-    <!-- Toast de Notificações (Advancements) -->
-    <div id="toastContainer" class="toast-container"></div>
-    
-    <!-- Settings Modal -->
-    <div id="settingsModal" class="modal">
-        <div class="modal-content settings-content">
-            <button class="modal-close">&times;</button>
-            <h2>⚙️ Configurações</h2>
-            <div class="settings-group">
-                <label>
-                    <input type="checkbox" id="settingReducedMotion" />
-                    Reduzir animações
-                </label>
-                <label>
-                    <input type="checkbox" id="settingHighContrast" />
-                    Alto contraste
-                </label>
-                <label>
-                    Volume de Áudio:
-                    <input type="range" id="settingVolume" min="0" max="100" value="50" />
-                </label>
-            </div>
-            <button id="btnResetProgress" class="btn-danger">Resetar Progresso</button>
-        </div>
-    </div>
+# Decisions
 
-    <!-- Scripts -->
-    <script src="config.js"></script>
-    <script src="state.js"></script>
-    <script src="particles.js"></script>
-    <script src="audio.js"></script>
-    <script src="interactions.js"></script>
-    <script src="modals.js"></script>
-    <script src="app.js"></script>
-</body>
-</html>
+## Stack chosen
+
+We chose a static HTML/CSS/JS approach to keep the experience lightweight, easy to deploy, and highly customizable for a romantic one-page interactive project.
+
+## Why this choice
+
+- no build pipeline required
+- easy deployment to static hosts
+- perfect for a personal, atmospheric app
+- works well with animation, user interaction and localStorage
+
+## Design direction
+
+The project aims to blend:
+
+- cozy indie aesthetics
+- pixel-inspired world building
+- soft magical atmosphere
+- romantic storytelling for Jones & Cami
+- playful hidden interactions and progression
+
+## Content strategy
+
+The core narrative is centered around:
+
+- friendship through games
+- return and reconnection
+- emotional confession
+- joyful relationship and future together
+
+This is editable via `config.js` for quick future updates and personalization.

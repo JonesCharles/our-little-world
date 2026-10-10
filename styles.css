@@ -1,0 +1,32 @@
+document.addEventListener("DOMContentLoaded", () => {
+  const settingsButton = document.getElementById("btnSettings");
+  if (settingsButton) {
+    settingsButton.addEventListener("click", () => {
+      const modal = document.getElementById("settingsModal");
+      if (modal) {
+        modal.classList.add("show");
+      }
+    });
+  }
+
+  const introText = document.createElement("div");
+  introText.className = "intro-banner";
+  introText.innerHTML = `
+    <span>Our Little World</span>
+    <strong>${APP_CONFIG.names.duo}</strong>
+    <small>${APP_CONFIG.story.summary}</small>
+  `;
+
+  document.body.appendChild(introText);
+
+  setTimeout(() => {
+    introText.classList.add("hidden");
+  }, 2400);
+
+  if (state.audioEnabled) {
+    audioEngine.init();
+    audioEngine.startAmbientLoop();
+  }
+
+  document.getElementById("btnAudio").textContent = state.audioEnabled ? "🔊" : "🔇";
+});
